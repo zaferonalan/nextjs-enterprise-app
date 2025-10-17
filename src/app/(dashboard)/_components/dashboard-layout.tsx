@@ -2,11 +2,15 @@
 import { Button } from "@/components/ui/button";
 import { Collapsible, CollapsibleContent,CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Separator } from "@/components/ui/separator";
-import { Apple, Boxes, ChevronDown, ChevronLeft, Menu, Ruler, Utensils } from "lucide-react";
+import { Apple, Boxes, ChevronDown, ChevronLeft, LogOut, Menu, Ruler, Utensils } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { ReactNode, useState } from "react";
 import {motion} from "motion/react";
 import Link from "next/link";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
+import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import ThemeToggle from "@/components/theme-toggle";
 
 type RouteGroupType = {
     group: string
@@ -96,17 +100,53 @@ type DashboardLayoutProps = {
 const DashboardLayout = ({ children }: DashboardLayoutProps) => {
     const [open, setOpen] = useState(false);
   return (
-    <div className="bg-background fixed z-10 flex h-12 w-screen items-center justify-between border px-2">
-        <Collapsible className="h-full" open={open} onOpenChange={setOpen}>
-            <CollapsibleTrigger className="m-2" asChild>
-                <Button size={"icon"} variant={"outline"}>
-                    <Menu/>
-                </Button>
-            </CollapsibleTrigger>
-        </Collapsible>
+    <div className="flex">
+        <div className="bg-background fixed z-10 flex h-12 w-screen items-center justify-between border px-2">
+            <Collapsible className="h-full" open={open} onOpenChange={setOpen}>
+                <CollapsibleTrigger className="m-2" asChild>
+                    <Button size={"icon"} variant={"outline"}>
+                        <Menu/>
+                    </Button>
+                </CollapsibleTrigger>
+            </Collapsible>
 
-        <div className="flex">
-            {/* ThemeTogle */}
+            <div className="flex">
+                {/* ThemeTogle */}
+                <ThemeToggle/>
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <Button className="flex h-9 items-center gap-2 px-2" variant={"ghost"}>
+                            <Avatar className="size-8">
+                                <AvatarFallback>A</AvatarFallback>
+                            </Avatar>
+                            <span className="hidden md:inline">Admin</span>
+                        </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="w-56">
+                        <DropdownMenuLabel>My Count</DropdownMenuLabel>
+                        <DropdownMenuSeparator/>
+
+                        <div className="flex items-center gap-3 px-2 py-1.5">
+                            <Avatar className="size-10">
+                                <AvatarFallback>A</AvatarFallback>
+                            </Avatar>
+                            <div>
+                                <p className="text-sm font-medium">Admin</p>
+                                <p className="text-muted-foreground text-xs">admin@test.com</p>
+                            </div>
+                        </div>
+                        <DropdownMenuSeparator/>
+                        <DropdownMenuItem
+                            onClick={() => {
+                                //logout
+                            }}
+                            variant="destructive"
+                        >
+                            <LogOut className="size-4"/>Logout
+                        </DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
+            </div>
         </div>
 
         <Collapsible open={open} onOpenChange={setOpen} className="fixed left-0 top-0 z-20 h-dvh">
@@ -133,7 +173,9 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
         <main className={`transition-all mt-14 p-4 flex-1 duration-300 ${open ? "translate-x-64" : "translate-x-0"}`}>
             {children}
         </main>
+        
     </div>
+    
   )
 };
 
